@@ -3,9 +3,22 @@ require('authenticate.php');
 require('connect.php');
 include('nav.php');
 
+// Function to delete a task
+function deleteTask($db, $task_id) {
+    try {
+        $query = "DELETE FROM task WHERE task_id = :task_id";
+        $statement = $db->prepare($query);
+        $statement->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+        $statement->execute();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
+// Function to delete a comment
 function deleteComment($db, $comment_id) {
     try {
-        $query = "DELETE FROM Comment WHERE comment_id = :comment_id";
+        $query = "DELETE FROM comment WHERE comment_id = :comment_id";
         $statement = $db->prepare($query);
         $statement->bindParam(':comment_id', $comment_id, PDO::PARAM_INT);
         $statement->execute();
@@ -14,14 +27,26 @@ function deleteComment($db, $comment_id) {
     }
 }
 
+// Check if the form is submitted for task deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['delete_task'])) {
+        $task_id = filter_input(INPUT_POST, 'delete_task_id', FILTER_SANITIZE_NUMBER_INT);
+        deleteTask($db, $task_id);
+        // Redirect back to index.php after deletion
+        header('Location: index.php');
+        exit();
+    }
     if (isset($_POST['delete_comment'])) {
-        $comment_id = filter_input(INPUT_POST, 'comment_id', FILTER_SANITIZE_NUMBER_INT);
+        $comment_id = filter_input(INPUT_POST, 'delete_comment_id', FILTER_SANITIZE_NUMBER_INT);
         deleteComment($db, $comment_id);
+        // Redirect back to index.php after deletion
+        header('Location: index.php');
+        exit();
     }
 }
 
-$query = "SELECT * FROM Task";
+// Fetch all tasks from the database
+$query = "SELECT * FROM task";
 $statement = $db->query($query);
 $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -66,28 +91,8 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= $task['priority'] ?></td>
                 <td><?= $task['deadline'] ?></td>
                 <td><?= $task['status'] ?></td>
-                <td>
-                    <?php
-                    $category_id = $task['category_id'];
-                    $category_query = "SELECT category_name FROM Categories WHERE category_id = :category_id";
-                    $category_statement = $db->prepare($category_query);
-                    $category_statement->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-                    $category_statement->execute();
-                    $category = $category_statement->fetch(PDO::FETCH_ASSOC);
-                    echo $category['category_name'];
-                    ?>
-                </td>
-                <td>
-                    <?php
-                    $user_id = $task['user_id'];
-                    $user_query = "SELECT username FROM User WHERE user_id = :user_id";
-                    $user_statement = $db->prepare($user_query);
-                    $user_statement->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                    $user_statement->execute();
-                    $user = $user_statement->fetch(PDO::FETCH_ASSOC);
-                    echo $user['username'];
-                    ?>
-                </td>
+                <td><?= $task['category_id'] ?></td>
+                <td><?= $task['user_id'] ?></td>
                 <td>
                     <a href="edit_task.php?id=<?= $task['task_id'] ?>">Edit</a> |
                     <form action="" method="POST" style="display: inline;">
@@ -96,19 +101,18 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                     </form>
                 </td>
                 <td>
-                    <?php
-                    $task_id = $task['task_id'];
-                    $comment_query = "SELECT * FROM Comment WHERE task_id = :task_id";
-                    $comment_statement = $db->prepare($comment_query);
-                    $comment_statement->bindParam(':task_id', $task_id, PDO::PARAM_INT);
-                    $comment_statement->execute();
-                    $comments = $comment_statement->fetchAll(PDO::FETCH_ASSOC);
-                    ?>
                     <ul>
-                        <?php foreach ($comments as $comment): ?>
+                        <?php
+                        $task_id = $task['task_id'];
+                        $comment_query = "SELECT * FROM comment WHERE task_id = :task_id";
+                        $comment_statement = $db->prepare($comment_query);
+                        $comment_statement->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+                        $comment_statement->execute();
+                        $comments = $comment_statement->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($comments as $comment): ?>
                             <li><?= $comment['comment'] ?>
                                 <form action="" method="POST" style="display: inline;">
-                                    <input type="hidden" name="comment_id" value="<?= $comment['comment_id'] ?>">
+                                    <input type="hidden" name="delete_comment_id" value="<?= $comment['comment_id'] ?>">
                                     <button type="submit" name="delete_comment" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</button>
                                 </form>
                             </li>

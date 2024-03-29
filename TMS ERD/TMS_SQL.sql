@@ -43,7 +43,7 @@ CREATE TABLE Comment (
     user_id INT,
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (task_id) REFERENCES Task(task_id),
+    FOREIGN KEY (task_id) REFERENCES Task(task_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
