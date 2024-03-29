@@ -2,21 +2,9 @@
 require('authenticate.php');
 require('connect.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['command'])) {
-        if ($_POST['command'] === 'Delete' && isset($_POST['task_id'])) {
-            try {
-                $task_id = filter_input(INPUT_POST, 'task_id', FILTER_SANITIZE_NUMBER_INT);
-                $query = "DELETE FROM task WHERE task_id = :task_id";
-                $statement = $db->prepare($query);
-                $statement->bindValue(':task_id', $task_id, PDO::PARAM_INT);
-                $statement->execute();
-                header("Location: index.php");
-                exit;
-            } catch (PDOException $e) {
-                echo "Error: " . $e->getMessage();
-            }
-        } elseif ($_POST['command'] === 'Update Task') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['command'])) {
+    if ($_POST['command'] === 'Update Task' && isset($_POST['task_id'])) {
+        try {
             $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
             $priority = filter_input(INPUT_POST, 'priority', FILTER_SANITIZE_STRING);
@@ -39,37 +27,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $statement->execute();
             header("Location: index.php");
             exit;
-        } elseif ($_POST['command'] === 'Add Task') {
-            try {
-                $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-                $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-                $priority = filter_input(INPUT_POST, 'priority', FILTER_SANITIZE_STRING);
-                $deadline = filter_input(INPUT_POST, 'deadline', FILTER_SANITIZE_STRING);
-                $status = filter_input(INPUT_POST, 'status', FILTER_SANITIZE_STRING);
-                $category_id = filter_input(INPUT_POST, 'category_id', FILTER_SANITIZE_NUMBER_INT);
-
-                $query = "SELECT MAX(task_id) AS last_id FROM task";
-                $statement = $db->query($query);
-                $last_id = $statement->fetch(PDO::FETCH_ASSOC)['last_id'];
-                $new_task_id = $last_id + 1;
-
-                $query = "INSERT INTO task (task_id, title, description, priority, deadline, status, category_id) 
-                          VALUES (:task_id, :title, :description, :priority, :deadline, :status, :category_id)";
-                $statement = $db->prepare($query);
-                $statement->bindValue(':task_id', $new_task_id, PDO::PARAM_INT);
-                $statement->bindValue(':title', $title);
-                $statement->bindValue(':description', $description);
-                $statement->bindValue(':priority', $priority);
-                $statement->bindValue(':deadline', $deadline);
-                $statement->bindValue(':status', $status);
-                $statement->bindValue(':category_id', $category_id, PDO::PARAM_INT);
-                $statement->execute();
-                header("Location: index.php");
-                exit;
-            } catch (PDOException $e) {
-                echo "Error: " . $e->getMessage();
-            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
         }
+    } elseif ($_POST['command'] === 'Delete' && isset($_POST['task_id'])) {
+        try {
+            $task_id = filter_input(INPUT_POST, 'task_id', FILTER_SANITIZE_NUMBER_INT);
+            $query = "DELETE FROM task WHERE task_id = :task_id";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':task_id', $task_id, PDO::PARAM_INT);
+            $statement->execute();
+            header("Location: index.php");
+            exit;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    } elseif ($_POST['command'] === 'Add Task') {
+        // Add task functionality goes here
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     try {
@@ -79,9 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $statement->bindValue(':task_id', $task_id, PDO::PARAM_INT);
         $statement->execute();
         $task = $statement->fetch();
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -106,12 +77,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Deadline: </label><input type="date" name="deadline" value="<?= $task['deadline'] ?>"><br>
         <label>Status: </label><input type="text" name="status" value="<?= $task['status'] ?>"><br>
         <label>Category ID: </label><input type="number" name="category_id" value="<?= $task['category_id'] ?>"><br>
+        <input type="hidden" name="task_id" value="<?= $task_id ?>">
         <input type="submit" name="command" value="Update Task">
         <input type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you want to delete this task?')">
     </form>
 </body>
 </html>
 <?php
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 } else {
     echo "<p>No task selected.</p>";
 }
