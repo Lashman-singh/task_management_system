@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $statement->bindValue(':username', $username);
     $statement->bindValue(':password', $password);
     $statement->bindValue(':department', $department);
-    $statement->bindValue(':role', $role);
+    $statement->bindVaaclue(':role', $role);
     $statement->execute();
 
     header("Location: index.php");
@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="register_user.css">
     <title>Register new employee</title>
 </head>
 <body>

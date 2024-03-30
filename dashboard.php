@@ -1,23 +1,15 @@
 <?php
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_type'])) {
+if(isset($_POST['switch_user'])) {
     $_SESSION['user_type'] = ($_SESSION['user_type'] === 'admin') ? 'simple' : 'admin';
-    header("Location: dashboard.php");
+}
+
+if(isset($_SERVER['HTTP_REFERER'])) {
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+    exit;
+} else {
+    header("Location: index.php");
     exit;
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>Dashboard</h1>
-    <form action="" method="POST">
-        <input type="submit" name="user_type" value="Switch to <?php echo ($_SESSION['user_type'] === 'admin') ? 'Simple' : 'Admin'; ?> User">
-    </form>
-</body>
-</html>

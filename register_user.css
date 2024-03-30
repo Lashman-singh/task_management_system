@@ -1,0 +1,62 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5; /* Added background color */
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 20px; /* Added padding at the top */
+}
+
+/* Main content */
+h1 {
+    text-align: center;
+    color: #4e54c8;
+    margin-bottom: 20px; /* Added margin at the bottom */
+}
+
+form {
+    width: 80%; /* Adjusted form width for better responsiveness */
+    max-width: 500px; /* Set max-width for larger screens */
+    margin: 0 auto;
+    border: 2px solid #ccc; /* Changed border color */
+    border-radius: 10px; /* Rounded corners */
+    padding: 30px; /* Increased padding inside the border */
+    background-color: #fff; /* Added background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added box shadow */
+}
+
+label {
+    display: block;
+    margin-bottom: 10px; /* Increased margin */
+    color: #333;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px; /* Increased margin */
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Rounded input fields */
+    box-sizing: border-box; /* Ensure padding and border are included in width */
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #4e54c8;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+input[type="submit"]:hover {
+    background-color: #8f94fb;
+}

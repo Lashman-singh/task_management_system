@@ -50,16 +50,16 @@ CREATE TABLE Comment (
 -- Inserting data into User table
 INSERT INTO User (username, department, role, password)
 VALUES
-('john_doe', 'IT', 'Manager', '123'),
-('jane_smith', 'IT', 'Developer', '123'),
-('mike_jones', 'IT', 'Administrator', '123'),
-('emily_wilson', 'IT', 'Tester', '123'),
-('alex_harris', 'IT', 'Designer', '123'),
-('sara_brown', 'IT', 'Support Specialist', '123'),
-('matt_taylor', 'IT', 'System Analyst', '123'),
-('laura_miller', 'IT', 'Network Engineer', '123'),
-('chris_anderson', 'IT', 'Database Administrator', '123'),
-('kim_jackson', 'IT', 'Security Analyst', '123');
+('Manjot', 'IT', 'Manager', '123'),
+('Lashman', 'IT', 'Developer', '123'),
+('Jagseer', 'IT', 'Administrator', '123'),
+('Manpreet', 'IT', 'Tester', '123'),
+('Amna', 'IT', 'Designer', '123'),
+('Bhatti', 'IT', 'Support Specialist', '123'),
+('Gurpreet', 'IT', 'System Analyst', '123'),
+('Lovepreet', 'IT', 'Network Engineer', '123'),
+('Gagandeep', 'IT', 'Database Administrator', '123'),
+('Prince', 'IT', 'Security Analyst', '123');
 
 -- Inserting data into Categories table
 INSERT INTO Categories (category_name) VALUES

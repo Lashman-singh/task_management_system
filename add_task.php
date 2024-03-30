@@ -12,6 +12,11 @@ $statement = $db->query($query);
 $maxIdResult = $statement->fetch();
 $nextAvailableId = $maxIdResult['max_id'] + 1;
 
+if ($_SESSION['user_type'] !== 'admin') {
+    echo "You are not authorized to access this page.";
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $description = $_POST['description'];
@@ -47,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="add_task.css">
     <title>Add New Task</title>
 </head>
 <body>

@@ -2,6 +2,11 @@
 require('authenticate.php');
 require('connect.php');
 
+if ($_SESSION['user_type'] !== 'admin') {
+    echo "You are not authorized to access this page.";
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['command'])) {
     if ($_POST['command'] === 'Update Task' && isset($_POST['task_id'])) {
         try {
@@ -43,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['command'])) {
             echo "Error: " . $e->getMessage();
         }
     } elseif ($_POST['command'] === 'Add Task') {
-        // Add task functionality goes here
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     try {

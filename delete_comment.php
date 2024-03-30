@@ -2,40 +2,28 @@
 require('authenticate.php');
 require('connect.php');
 
-$query = "SELECT * FROM comments";
-$statement = $db->query($query);
-$comments = $statement->fetchAll(PDO::FETCH_ASSOC);
-?>
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_id'])) {
+    if ($_SESSION['user_type'] === 'admin') {
+        try {
+            $task_id = filter_input(INPUT_POST, 'task_id', FILTER_SANITIZE_NUMBER_INT);
+            $query = "DELETE FROM Task WHERE task_id = :task_id";
+            $statement = $db->prepare($query);
+            $statement->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+            $statement->execute();
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comments</title>
-</head>
-<body>
-    <h1>Comments</h1>
-    <table>
-        <tr>
-            <th>Commenter Name</th>
-            <th>Comment Content</th>
-            <th>Page ID</th>
-            <th>Created At</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($comments as $comment): ?>
-            <tr>
-                <td><?= $comment['commenter_name'] ?></td>
-                <td><?= $comment['comment_content'] ?></td>
-                <td><?= $comment['page_id'] ?></td>
-                <td><?= $comment['created_at'] ?></td>
-                <td>
-                    <a href="delete_comment.php?id=<?= $comment['id'] ?>" 
-                       onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-</body>
-</html>
+            if ($statement->rowCount() > 0) {
+                header("Location: index.php");
+                exit;
+            } else {
+                echo "Error: Task not found or already deleted.";
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    } else {
+        echo "You are not authorized to perform this action.";
+    }
+} else {
+    echo "<p>No task selected.</p>";
+}
+?>
