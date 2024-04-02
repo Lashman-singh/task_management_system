@@ -1,0 +1,26 @@
+nav {
+    background: linear-gradient(to right, #4e54c8, #8f94fb);
+    padding: 20px 0;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 18px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background: linear-gradient(to right, #4e54c8, #8f94fb);
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    bottom: 0;
+}
+
