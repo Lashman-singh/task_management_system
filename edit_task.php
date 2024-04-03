@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="edit_task.css">
+    <link rel="stylesheet" href="nav_footer.css">
     <title>Edit Task</title>
     <script src="https://cdn.tiny.cloud/1/399lhfg7ylluxpdnohjauznz6287n1z2pqrc4araoshqz5zd/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script>

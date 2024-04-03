@@ -7,14 +7,16 @@ DROP TABLE IF EXISTS Task;
 DROP TABLE IF EXISTS Categories;
 DROP TABLE IF EXISTS User;
 
--- User table
+-- User table with image filename column
 CREATE TABLE User (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     department VARCHAR(50),
     role VARCHAR(50),
-    password VARCHAR(255) NOT NULL 
+    password VARCHAR(255) NOT NULL,
+    image_filename VARCHAR(255) 
 );
+
 
 -- Categories table
 CREATE TABLE Categories (
@@ -47,19 +49,20 @@ CREATE TABLE Comment (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
--- Inserting data into User table
-INSERT INTO User (username, department, role, password)
+-- Inserting data into User table 
+INSERT INTO User (username, department, role, password, image_filename)
 VALUES
-('Manjot', 'IT', 'Manager', '123'),
-('Lashman', 'IT', 'Developer', '123'),
-('Jagseer', 'IT', 'Administrator', '123'),
-('Manpreet', 'IT', 'Tester', '123'),
-('Amna', 'IT', 'Designer', '123'),
-('Bhatti', 'IT', 'Support Specialist', '123'),
-('Gurpreet', 'IT', 'System Analyst', '123'),
-('Lovepreet', 'IT', 'Network Engineer', '123'),
-('Gagandeep', 'IT', 'Database Administrator', '123'),
-('Prince', 'IT', 'Security Analyst', '123');
+('Manjot', 'IT', 'Manager', '123', ''),
+('Lashman', 'IT', 'Developer', '123', ''),
+('Jagseer', 'IT', 'Administrator', '123', ''),
+('Manpreet', 'IT', 'Tester', '123', ''),
+('Amna', 'IT', 'Designer', '123', ''),
+('Bhatti', 'IT', 'Support Specialist', '123', ''),
+('Gurpreet', 'IT', 'System Analyst', '123', ''),
+('Lovepreet', 'IT', 'Network Engineer', '123', ''),
+('Gagandeep', 'IT', 'Database Administrator', '123', ''),
+('Prince', 'IT', 'Security Analyst', '123', '');
+
 
 -- Inserting data into Categories table
 INSERT INTO Categories (category_name) VALUES

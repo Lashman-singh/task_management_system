@@ -4,7 +4,7 @@ require('connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+    $description = $_POST['description']; 
     $priority = filter_input(INPUT_POST, 'priority', FILTER_SANITIZE_STRING);
     $deadline = filter_input(INPUT_POST, 'deadline', FILTER_SANITIZE_STRING);
     $status = filter_input(INPUT_POST, 'status', FILTER_SANITIZE_STRING);
@@ -60,7 +60,6 @@ exit;
             <label for="title">Title <br><br> </label>
             <input type="text" name="title" id="title" minlength="1" required>
         </div><br><br>
-
         <div class="group-form">
             <label for="description">Description </label><br><br>
             <textarea name="description" id="description" cols="70" rows="8" minlength="1" required></textarea>

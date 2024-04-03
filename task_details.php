@@ -62,6 +62,7 @@ if ($_SESSION['user_type'] === 'admin' && isset($_POST['switch_user'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="nav_footer.css">
     <link rel="stylesheet" href="task_details.css">
     <title>Task Details</title>
 </head>
