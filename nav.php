@@ -9,6 +9,15 @@
     <?php endif; ?>
 
     <form action="dashboard.php" method="POST" id="switch_form">
-        <input type="submit" id="switch_user" name="switch_user" value="Switch to <?= ($_SESSION['user_type'] === 'admin') ? 'Simple' : 'Admin'; ?> User">
+        <input type="hidden" name="switch_user" value="<?= ($_SESSION['user_type'] === 'admin') ? 'simple' : 'admin'; ?>">
+        <?php if ($_SESSION['user_type'] === 'admin'): ?>
+            <button type="submit">User</button>
+        <?php else: ?>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Admin</button>
+        <?php endif; ?>
     </form>
 </nav>

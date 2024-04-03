@@ -14,8 +14,10 @@ CREATE TABLE User (
     department VARCHAR(50),
     role VARCHAR(50),
     password VARCHAR(255) NOT NULL,
-    image_filename VARCHAR(255) 
+    image_filename VARCHAR(255),
+    image_data LONGBLOB
 );
+
 
 
 -- Categories table

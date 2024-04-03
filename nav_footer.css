@@ -15,6 +15,35 @@ nav a:hover {
     text-decoration: underline;
 }
 
+nav form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+nav input[type="text"],
+nav input[type="password"] {
+    padding: 8px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+nav button[type="submit"] {
+    padding: 8px 20px;
+    background-color: #4e54c8;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+nav button[type="submit"]:hover {
+    background-color: #8f94fb;
+}
+
 footer {
     background: linear-gradient(to right, #4e54c8, #8f94fb);
     color: #ffffff;

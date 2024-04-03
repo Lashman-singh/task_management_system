@@ -89,9 +89,9 @@
                 <option value="<?= $category['category_id']; ?>"><?= $category['category_name']; ?></option>
             <?php endforeach; ?>
         </select><br>
-        <label>Assigned To (User ID):</label><br>
+        <label>Assigned To (User ID): 1-10</label><br>
         <input type="number" name="user_id" required><br>
-        <button type="submit">Add Task</button>
+        <button id="add_task" type="submit">Add Task</button>
     </form>
     <?php include('footer.php'); ?>
 </body>
