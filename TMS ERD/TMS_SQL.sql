@@ -13,7 +13,7 @@ CREATE TABLE User (
     username VARCHAR(50) NOT NULL,
     department VARCHAR(50),
     role VARCHAR(50),
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,                                                                                                  
     image_filename VARCHAR(255),
     image_data LONGBLOB
 );
