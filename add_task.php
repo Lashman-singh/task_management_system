@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="add_task.css">
-    <link rel="stylesheet" href="nav_footer.css">
     <title>Add New Task</title>
     <script src="https://cdn.tiny.cloud/1/um1ud57t4xzcel5dep4c6pjsvbkwwlcfn3462pdbbfd71qkn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
@@ -23,11 +22,11 @@
     require('connect.php');
     include('nav.php');
 
-    $query = "SELECT * FROM categories";
+    $query = "SELECT * FROM Categories";
     $statement = $db->query($query);
     $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $query = "SELECT MAX(task_id) AS max_id FROM task";
+    $query = "SELECT MAX(task_id) AS max_id FROM Task";
     $statement = $db->query($query);
     $maxIdResult = $statement->fetch();
     $nextAvailableId = $maxIdResult['max_id'] + 1;
@@ -44,10 +43,10 @@
         $deadline = $_POST['deadline'];
         $status = $_POST['status'];
         $category_id = $_POST['category_id'];
-        $user_id = $_POST['user_id'];
+        $employee_id = $_POST['employee_id']; 
 
-        $query = "INSERT INTO task (task_id, title, description, priority, deadline, status, category_id, user_id) 
-                  VALUES (:task_id, :title, :description, :priority, :deadline, :status, :category_id, :user_id)";
+        $query = "INSERT INTO Task (task_id, title, description, priority, deadline, status, category_id, employee_id) 
+                  VALUES (:task_id, :title, :description, :priority, :deadline, :status, :category_id, :employee_id)"; 
         $statement = $db->prepare($query);
         $statement->bindParam(':task_id', $nextAvailableId);
         $statement->bindParam(':title', $title);
@@ -56,7 +55,7 @@
         $statement->bindParam(':deadline', $deadline);
         $statement->bindParam(':status', $status);
         $statement->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-        $statement->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $statement->bindParam(':employee_id', $employee_id, PDO::PARAM_INT);
 
         if ($statement->execute()) {
             header("Location: index.php");
@@ -89,8 +88,8 @@
                 <option value="<?= $category['category_id']; ?>"><?= $category['category_name']; ?></option>
             <?php endforeach; ?>
         </select><br>
-        <label>Assigned To (User ID): 1-10</label><br>
-        <input type="number" name="user_id" required><br>
+        <label>Assigned To (Employee ID): 1-10</label><br> 
+        <input type="number" name="employee_id" required><br> 
         <button id="add_task" type="submit">Add Task</button>
     </form>
     <?php include('footer.php'); ?>
