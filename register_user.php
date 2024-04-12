@@ -3,47 +3,69 @@ session_start();
 require('connect.php');
 include('nav.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $error_message = '';
 
     $username = $_POST['username'];
     $password = $_POST['password'];
     $department = $_POST['department'];
+    
     $role = $_POST['role'];
 
     $image_filename = '';
-    $image_data = '';
     if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $image_filename = $_FILES['image']['name'];
         $temporary_image_path = $_FILES['image']['tmp_name'];
-        $new_image_path = 'uploads/' . $image_filename;
 
-        $allowed_image_types = array(IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF);
-        $image_info = getimagesize($temporary_image_path);
-        if ($image_info !== false && in_array($image_info[2], $allowed_image_types)) {
-            if (move_uploaded_file($temporary_image_path, $new_image_path)) {
-                $image_data = file_get_contents($new_image_path);
+        $image_type = exif_imagetype($temporary_image_path);
+        if ($image_type === IMAGETYPE_PNG) {
+            
+            $original_image = imagecreatefrompng($temporary_image_path);
+
+            $original_width = imagesx($original_image);
+            $original_height = imagesy($original_image);
+
+            $max_width = 500;
+            $max_height = 500;
+            $aspect_ratio = $original_width / $original_height;
+
+            if ($original_width > $max_width || $original_height > $max_height) {
+                if ($aspect_ratio > 1) {
+                    $new_width = $max_width;
+                    $new_height = $max_width / $aspect_ratio;
+                } else {
+                    $new_width = $max_height * $aspect_ratio;
+                    $new_height = $max_height;
+                }
             } else {
-                $error_message = "Image upload failed. Please try again.";
+                $new_width = $original_width;
+                $new_height = $original_height;
             }
+
+            $resized_image = imagecreatetruecolor($new_width, $new_height);
+
+            imagecopyresampled($resized_image, $original_image, 0, 0, 0, 0, $new_width, $new_height, $original_width, $original_height);
+
+            $image_filename = uniqid() . '.png';
+            $new_image_path = 'uploads/' . $image_filename;
+            imagepng($resized_image, $new_image_path);
+
+            imagedestroy($original_image);
+            imagedestroy($resized_image);
         } else {
-            $error_message = "Uploaded file is not a supported image type. Please upload a JPEG, PNG, or GIF file.";
+            $error_message = "Uploaded file is not a PNG image. Please upload a valid PNG file.";
         }
-    } else {
-        $error_message = "No file uploaded or an error occurred during file upload.";
     }
 
     if (empty($error_message)) {
         unset($error_message);
 
-        $query = "INSERT INTO User (username, password, department, role, image_filename, image_data) VALUES (:username, :password, :department, :role, :image_filename, :image_data)";
+        $query = "INSERT INTO Employee (username, password, department, role, image_filename) VALUES (:username, :password, :department, :role, :image_filename)";
         $statement = $db->prepare($query);
         $statement->bindValue(':username', $username);
         $statement->bindValue(':password', $password);
         $statement->bindValue(':department', $department);
         $statement->bindValue(':role', $role);
         $statement->bindValue(':image_filename', $image_filename);
-        $statement->bindValue(':image_data', $image_data, PDO::PARAM_LOB);
         $statement->execute();
 
         header("Location: index.php");
@@ -57,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register new employee</title>
+    <title>Register An Employee</title>
     <link rel="stylesheet" href="register_user.css">
     <link rel="stylesheet" href="nav_footer.css">
 </head>
@@ -78,13 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="file" name="image" id="image" style="display: inline-block;">
         </div>
         <br>
-        <input type="submit" value="Register" id="register">
+        <input type="submit" name="register" value="Register" id="register">
     </form>
-    <script>
-        document.querySelector('input[type="file"]').addEventListener('change', function() {
-            document.getElementById('file_name').textContent = this.files[0].name;
-        });
-    </script>
+
     <?php include('footer.php'); ?> 
 </body>
 </html>
