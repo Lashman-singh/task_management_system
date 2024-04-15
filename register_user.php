@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $department = $_POST['department'];
-    
     $role = $_POST['role'];
 
     $image_filename = '';
@@ -18,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
 
         $image_type = exif_imagetype($temporary_image_path);
         if ($image_type === IMAGETYPE_PNG) {
-            
             $original_image = imagecreatefrompng($temporary_image_path);
 
             $original_width = imagesx($original_image);
@@ -59,13 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     if (empty($error_message)) {
         unset($error_message);
 
-        $query = "INSERT INTO Employee (username, password, department, role, image_filename) VALUES (:username, :password, :department, :role, :image_filename)";
+        $query = "INSERT INTO Employee (username, password, department, role, image_filename, image_data) VALUES (:username, :password, :department, :role, :image_filename, :image_data)";
         $statement = $db->prepare($query);
         $statement->bindValue(':username', $username);
         $statement->bindValue(':password', $password);
         $statement->bindValue(':department', $department);
         $statement->bindValue(':role', $role);
         $statement->bindValue(':image_filename', $image_filename);
+        $statement->bindValue(':image_data', $image_data, PDO::PARAM_LOB); // Bind image data as a BLOB
         $statement->execute();
 
         header("Location: index.php");
@@ -81,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register An Employee</title>
     <link rel="stylesheet" href="register_user.css">
-    <link rel="stylesheet" href="nav_footer.css">
 </head>
 <body>
     <h1>Register An Employee</h1>
