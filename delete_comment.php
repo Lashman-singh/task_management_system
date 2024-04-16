@@ -2,20 +2,22 @@
 require('authenticate.php');
 require('connect.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id'])) {
     if ($_SESSION['user_type'] === 'admin') {
         try {
-            $task_id = filter_input(INPUT_POST, 'task_id', FILTER_SANITIZE_NUMBER_INT);
-            $query = "DELETE FROM Task WHERE task_id = :task_id";
+            $comment_id = filter_input(INPUT_POST, 'delete_comment_id', FILTER_SANITIZE_NUMBER_INT);
+            $task_id = $_POST['task_id'];
+
+            $query = "DELETE FROM Comment WHERE comment_id = :comment_id";
             $statement = $db->prepare($query);
-            $statement->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+            $statement->bindParam(':comment_id', $comment_id, PDO::PARAM_INT);
             $statement->execute();
 
             if ($statement->rowCount() > 0) {
-                header("Location: index.php");
-                exit;
+                header("Location: task_details.php?id=$task_id");
+                exit();
             } else {
-                echo "Error: Task not found or already deleted.";
+                echo "Error: Comment not found or already deleted.";
             }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -24,6 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_id'])) {
         echo "You are not authorized to perform this action.";
     }
 } else {
-    echo "<p>No task selected.</p>";
+    echo "<p>No comment selected.</p>";
 }
 ?>
