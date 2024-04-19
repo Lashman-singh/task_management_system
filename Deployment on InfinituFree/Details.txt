@@ -1,0 +1,24 @@
+
+MySQL DB Name:	if0_36389680_task_management
+MySQL User Name: if0_36389680
+MySQL Password:	(Your vPanel Password)
+MySQL Host Name: sql205.infinityfree.com	
+PHPMyAdmin: Admin
+			
+
+------------------------Connect.php----------------------------------
+
+<?php
+define('DB_DSN', 'mysql:host=sql205.infinityfree.com;dbname=if0_36389680_task_management;charset=utf8');
+define('DB_USER', 'if0_36389680');
+define('DB_PASS', 'bWd4rwnyIzb0qd');
+
+try {
+    $db = new PDO(DB_DSN, DB_USER, DB_PASS);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Error connecting to the database: " . $e->getMessage();
+    exit; 
+}
+?>
+
